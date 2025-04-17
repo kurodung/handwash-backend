@@ -5,7 +5,7 @@ const API_BASE_URL =
     ? Platform.OS === 'android'
       ? 'http://10.0.2.2:3000/api' // Android Emulator
       : 'http://localhost:3000/api' // iOS Simulator
-    : 'https://your-production-server.com/api'); // เปลี่ยนตอน deploy จริง
+    : 'https://handwash-backend.onrender.com/api'); // เปลี่ยนตอน deploy จริง
 
 export const submitHandwashingData = async (data) => {
   try {
