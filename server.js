@@ -12,13 +12,14 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// PostgreSQL connection
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 10000 // เพิ่มเวลา timeout
 });
 
 // Check connection
@@ -76,8 +77,27 @@ app.get("/api/stats", async (req, res) => {
     const result = await pool.query(statsQuery);
     res.json({ status: "success", data: result.rows });
   } catch (error) {
-    console.error("❌ Error fetching stats:", error);
-    res.status(500).json({ status: "error", message: "Failed to fetch stats" });
+    console.error("❌ Error fetching stats:", {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      detail: error.detail
+    });
+    res.status(500).json({ 
+      status: "error", 
+      message: error.message,
+      code: error.code 
+    });
+  }
+});
+
+app.get("/api/test-db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT 1 as test");
+    res.json({ status: "success", data: result.rows });
+  } catch (error) {
+    console.error("Database test error:", error.message);
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 
