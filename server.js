@@ -41,7 +41,7 @@ app.post("/api/submit", async (req, res) => {
 
   try {
     const insertQuery = `
-      INSERT INTO handwashing_logs
+      INSERT INTO handwash
       (status, moment, activity, method, quality, evaluator, suggestion, timestamp)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
